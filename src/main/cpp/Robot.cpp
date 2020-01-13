@@ -46,8 +46,8 @@ class Robot : public frc::TimedRobot {
 
  private:
   // Robot drive system
-  frc::PWMVictorSPX m_left{0};
-  frc::PWMVictorSPX m_right{1};
+  frc::PWMVictorSPX m_left{1};
+  frc::PWMVictorSPX m_right{0};
   frc::DifferentialDrive m_robotDrive{m_left, m_right};
 
   frc::Joystick m_stick{0};
