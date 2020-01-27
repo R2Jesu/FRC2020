@@ -11,7 +11,7 @@
 #include <frc/Timer.h>
 #include <frc/drive/DifferentialDrive.h>
 #include <frc/livewindow/LiveWindow.h>
-
+#include <frc/spark.h>
 class Robot : public frc::TimedRobot {
  public:
   Robot() {
@@ -40,6 +40,18 @@ class Robot : public frc::TimedRobot {
   void TeleopPeriodic() override {
     // Drive with arcade style (use right stick)
     m_robotDrive.ArcadeDrive(m_stick.GetY(), m_stick.GetX());
+
+    // Run launch motors when joystick trigger is pulled
+    if (m_stick.GetRawButton(1))
+    { launchMotorLeft.Set(1);
+      launchMotorRight.Set(-1);
+    }
+    else
+    {
+      launchMotorLeft.Set(0);
+      launchMotorRight.Set(0);
+    }
+    
   }
 
   void TestPeriodic() override {}
@@ -53,6 +65,8 @@ class Robot : public frc::TimedRobot {
   frc::Joystick m_stick{0};
   frc::LiveWindow& m_lw = *frc::LiveWindow::GetInstance();
   frc::Timer m_timer;
+  frc::Spark launchMotorLeft{9}; 
+  frc::Spark launchMotorRight{8}; 
 };
 
 #ifndef RUNNING_FRC_TESTS
