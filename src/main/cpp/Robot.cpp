@@ -5,26 +5,21 @@
 /* the project.                                                               */
 /*----------------------------------------------------------------------------*/
 
-#include <frc/Joystick.h>
-#include <frc/PWMVictorSPX.h>
-#include <frc/TimedRobot.h>
-#include <frc/Timer.h>
-#include <frc/drive/DifferentialDrive.h>
-#include <frc/livewindow/LiveWindow.h>
-#include <frc/spark.h>
-class Robot : public frc::TimedRobot {
- public:
-  Robot() {
+#include "Robot.h"
+
+  Robot::Robot() {
     m_robotDrive.SetExpiration(0.1);
     m_timer.Start();
   }
 
-  void AutonomousInit() override {
+  void Robot::AutonomousInit() 
+   {
     m_timer.Reset();
     m_timer.Start();
   }
 
-  void AutonomousPeriodic() override {
+  void Robot::AutonomousPeriodic() 
+   {
     // Drive for 2 seconds
     if (m_timer.Get() < 2.0) {
       // Drive forwards half speed
@@ -35,9 +30,10 @@ class Robot : public frc::TimedRobot {
     }
   }
 
-  void TeleopInit() override {}
+  void Robot::TeleopInit()  {}
 
-  void TeleopPeriodic() override {
+  void Robot::TeleopPeriodic() 
+   {
     // Drive with arcade style (use right stick)
     m_robotDrive.ArcadeDrive(m_stick.GetY(), m_stick.GetX());
 
@@ -54,20 +50,8 @@ class Robot : public frc::TimedRobot {
     
   }
 
-  void TestPeriodic() override {}
+  void Robot::TestPeriodic()  {}
 
- private:
-  // Robot drive system
-  frc::PWMVictorSPX m_left{1};
-  frc::PWMVictorSPX m_right{0};
-  frc::DifferentialDrive m_robotDrive{m_left, m_right};
-
-  frc::Joystick m_stick{0};
-  frc::LiveWindow& m_lw = *frc::LiveWindow::GetInstance();
-  frc::Timer m_timer;
-  frc::Spark launchMotorLeft{9}; 
-  frc::Spark launchMotorRight{8}; 
-};
 
 #ifndef RUNNING_FRC_TESTS
 int main() { return frc::StartRobot<Robot>(); }
