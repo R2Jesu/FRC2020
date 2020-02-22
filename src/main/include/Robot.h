@@ -15,7 +15,13 @@
 
 class Robot : public frc::TimedRobot {
  public:
+
+  // Consturctor
   Robot();
+
+  // =================================================
+  //  Top Level Robot Functions
+  // =================================================
 
   void AutonomousInit();
 
@@ -28,6 +34,21 @@ class Robot : public frc::TimedRobot {
   void TestPeriodic();
 
  private:
+
+  // =================================================
+  //  Subsystem Control Functions
+  // =================================================
+  
+  //  Main Robot Drive
+  void R2Jesu_ProcessDrive(void);
+
+  //  Main User Control functions.
+  //  This may need to be split out.
+  void R2Jesu_ProcessUserControl(void);
+
+  // Process the Color Wheel Control
+  void R2Jesu_ProcessColorWheel(void);
+
   // Robot drive system
   frc::PWMVictorSPX m_left{1};
   frc::PWMVictorSPX m_right{0};
