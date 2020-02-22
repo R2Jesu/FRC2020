@@ -7,26 +7,23 @@
 
 #include "Robot.h"
 
-  Robot::Robot() 
+  void Robot::R2Jesu_ProcessUserControl() 
   {
-    m_robotDrive.SetExpiration(0.1);
-    m_timer.Start();
+     // Run launch motors when joystick trigger is pulled
+    if (m_stick.GetRawButton(1))
+    { launchMotorLeft.Set(1);
+      launchMotorRight.Set(-1);
+    }
+    else
+    {
+      launchMotorLeft.Set(0);
+      launchMotorRight.Set(0);
+    }
+
+    // Color Wheel processing
+    R2Jesu_ProcessColorWheel();
+
   }
 
-  void Robot::TeleopInit()  {}
-
-  void Robot::TeleopPeriodic() 
-  {
-
-    // Process user control before drive control.  We may want to switch
-     R2Jesu_ProcessUserControl();
-     R2Jesu_ProcessDrive();
-    
-  }
-
-  void Robot::TestPeriodic()  {}
-
-
-#ifndef RUNNING_FRC_TESTS
-int main() { return frc::StartRobot<Robot>(); }
-#endif
+ 
+ 

@@ -7,26 +7,22 @@
 
 #include "Robot.h"
 
-  Robot::Robot() 
+  void Robot::AutonomousInit() 
   {
-    m_robotDrive.SetExpiration(0.1);
+    m_timer.Reset();
     m_timer.Start();
   }
 
-  void Robot::TeleopInit()  {}
-
-  void Robot::TeleopPeriodic() 
+  void Robot::AutonomousPeriodic() 
   {
-
-    // Process user control before drive control.  We may want to switch
-     R2Jesu_ProcessUserControl();
-     R2Jesu_ProcessDrive();
-    
+    // Drive for 2 seconds
+    if (m_timer.Get() < 2.0) {
+      // Drive forwards half speed
+      m_robotDrive.ArcadeDrive(-0.5, 0.0);
+    } else {
+      // Stop robot
+      m_robotDrive.ArcadeDrive(0.0, 0.0);
+    }
   }
 
-  void Robot::TestPeriodic()  {}
-
-
-#ifndef RUNNING_FRC_TESTS
-int main() { return frc::StartRobot<Robot>(); }
-#endif
+ 
