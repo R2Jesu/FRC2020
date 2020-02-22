@@ -7,26 +7,7 @@
 
 #include "Robot.h"
 
-  Robot::Robot() 
-  {
-    m_robotDrive.SetExpiration(0.1);
-    m_timer.Start();
-  }
 
-  void Robot::TeleopInit()  {}
-
-  void Robot::TeleopPeriodic() 
-  {
-
-    // Process user control before drive control.  We may want to switch
-     R2Jesu_ProcessUserControl();
-     R2Jesu_ProcessDrive();
-    
-  }
-
-  void Robot::TestPeriodic()  {}
-
-
-#ifndef RUNNING_FRC_TESTS
-int main() { return frc::StartRobot<Robot>(); }
-#endif
+  void Robot::R2Jesu_ProcessColorWheel() 
+   {
+   }
