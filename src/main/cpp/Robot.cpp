@@ -7,11 +7,8 @@
 
 #include "Robot.h"
 
-#define CORJESU_TURNON_PNEUMATICS 1
-
 Robot::Robot()
 {
-
   // Init Timer
   m_timer.Start();
 
@@ -20,12 +17,23 @@ Robot::Robot()
   m_drvL = 0.0;
   m_drvR = 0.0;
 
-    // Init Shooter Drive
+// Init Shooter Drive
+#if R2JESU_TURNON_SHOOTER
   m_ShooterMotorLeft.RestoreFactoryDefaults();
   m_ShooterMotorRight.RestoreFactoryDefaults();
   //  Invert the right motor
   m_ShooterMotorRight.SetInverted(true);
+#endif
 
+// Init Winch Drive
+#if R2JESU_TURNON_WINCH
+  m_winchMotor.Set(0.0);
+#endif
+
+// Init Intake Drive
+#if R2JESU_TURNON_INTAKE
+  snowMotor.Set(0.0);
+#endif
 
   //  Init Color Sensor
   m_colorMatcher.AddColorMatch(kBlueTarget);
@@ -35,7 +43,7 @@ Robot::Robot()
   m_colorMatcher.AddColorMatch(Default);
 
   // Run Pneumatics
-#if CORJESU_TURNON_PNEUMATICS
+#if R2JESU_TURNON_PNEUMATICS
   // Set Compressor Object for automatic closed loop control
   compressorObject.SetClosedLoopControl(true);
   // Set Solenoids to iniital stat
@@ -43,7 +51,7 @@ Robot::Robot()
 #endif
 }
 
-void Robot::TeleopInit() 
+void Robot::TeleopInit()
 {
   gameColor = nun;
 }
@@ -52,7 +60,7 @@ void Robot::TeleopPeriodic()
 {
 
   // Set the target color
-R2Jesu_CheckGameTargetColor();
+  R2Jesu_CheckGameTargetColor();
 
   // Process user control before drive control.
   R2Jesu_ProcessUserControl();

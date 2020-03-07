@@ -7,14 +7,28 @@
 
 #include "Robot.h"
 
-void Robot::R2Jesu_ProcessDrive()
+void Robot::R2Jesu_ProcessDrive(double p_LimitFactor)
 {
-
-#if 0 // Need to update to merge in other motor requests
-  m_drvL += m_Drivestick.GetY();
-  m_drvR += m_Drivestick.GetX();
-#endif
+  // Limit the drive motors for certain operations like color wheel
+  if (m_Drivestick.GetRawButton(1)) // Break
+  {
+    m_drvL = 0.0;
+    m_drvR = 0.0;
+  }
+  else
+  {
+  m_drvL = -m_Drivestick.GetY() * p_LimitFactor;
+  m_drvR = m_Drivestick.GetX() * p_LimitFactor;
+  }
+  
 
   // Drive with arcade style (use right stick)
-  m_robotDrive.ArcadeDrive(m_Drivestick.GetY(), m_Drivestick.GetX());
+  m_robotDrive.ArcadeDrive(m_drvL, m_drvR);
+
+#if R2JESU_TURNON_SMARTDASHBOARD
+  frc::SmartDashboard::PutNumber("DrvL", m_drvL);
+  frc::SmartDashboard::PutNumber("DrvR", m_drvR);
+  frc::SmartDashboard::PutNumber("DrvL", m_drvL);
+  frc::SmartDashboard::PutNumber("DrvLimit", p_LimitFactor);
+#endif
 }

@@ -36,6 +36,23 @@
 
 #define R2JESU_TURNON_SMARTDASHBOARD 1
 
+// Control robot config for either Fin (1) or Rex (0)
+#define R2JESU_FIN_CONFIG 0
+
+#if R2JESU_FIN_CONFIG
+#  define R2JESU_TURNON_PNEUMATICS 1
+#  define R2JESU_TURNON_ENCODER 1
+#  define R2JESU_TURNON_INTAKE 1
+#  define R2JESU_TURNON_SHOOTER 1
+#  define R2JESU_TURNON_WINCH 0
+#else
+#  define R2JESU_TURNON_PNEUMATICS 0
+#  define R2JESU_TURNON_ENCODER 0
+#  define R2JESU_TURNON_INTAKE 0
+#  define R2JESU_TURNON_SHOOTER 0
+#  define R2JESU_TURNON_WINCH 0
+#endif
+
 class Robot : public frc::TimedRobot
 {
 public:
@@ -62,7 +79,7 @@ private:
   // =================================================
 
   //  Main Robot Drive
-  void R2Jesu_ProcessDrive(void);
+  void R2Jesu_ProcessDrive(double p_LimitFactor = 1.0);
 
   //  Main User Control functions.
   //  This may need to be split out.
@@ -82,16 +99,19 @@ private:
 
   // User Control
   frc::Joystick m_Drivestick{0};
-  frc::Joystick m_OperatorStick{0};
+  frc::Joystick m_OperatorStick{1};
+  frc::Joystick m_TestStick{5};
 
   // Robot drive system
   frc::PWMVictorSPX m_leftMotor{0};  // Second motor wired to Y PWM Cablec
   frc::PWMVictorSPX m_rightMotor{1}; // Second motor wired to Y PWM Cable
   frc::DifferentialDrive m_robotDrive{m_leftMotor, m_rightMotor};
 
-  // Encoders
-  //frc::Encoder m_encL{7, 8, false, frc::Encoder::k4X};
-  //frc::Encoder m_encR{4, 5, false, frc::Encoder::k4X};
+// Encoders
+#if R2JESU_TURNON_ENCODER
+  frc::Encoder m_encL{7, 8, false, frc::Encoder::k4X};
+  frc::Encoder m_encR{4, 5, false, frc::Encoder::k4X};
+#endif
 
   // Because motor control cmds may come from other parts of the code use these
   // objects to control the final motor control
@@ -101,14 +121,18 @@ private:
   // Ball Intake Subsystem
   WPI_TalonSRX snowMotor{2};
 
-  // Ball Shooter Subsystem - Pneumatics & Motor
+// Ball Shooter Subsystem - Pneumatics & Motor
+#if R2JESU_TURNON_SHOOTER
   rev::CANSparkMax m_ShooterMotorLeft{1, rev::CANSparkMax::MotorType::kBrushless};
   rev::CANSparkMax m_ShooterMotorRight{3, rev::CANSparkMax::MotorType::kBrushless};
+#endif
+
+#if R2JESU_TURNON_PNEUMATICS
   frc::Compressor compressorObject;
   frc::Solenoid ballPopper{0};
+#endif
 
   // Color Wheel Subsystem
-
   static constexpr auto i2cPort = frc::I2C::Port::kOnboard;
   rev::ColorSensorV3 m_colorSensor{i2cPort};
   rev::ColorMatch m_colorMatcher;
@@ -126,6 +150,7 @@ private:
   frc::NidecBrushless ColorWheelmotor = frc::NidecBrushless(3, 0);
 
   // Winch Subsystem
+  WPI_TalonSRX m_winchMotor{4};
 
   // Support Objects
   frc::Timer m_timer;

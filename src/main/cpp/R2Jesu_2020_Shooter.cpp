@@ -10,37 +10,50 @@
 void Robot::R2Jesu_ProcessShooter()
 {
   // Control shooter
+  bool l_ToggleShooterOff = false;
   double l_mtrPwr = 0.0;
 
-  if (m_OperatorStick.GetRawButton(9))
+  if (m_OperatorStick.GetThrottle() >  0.3 && !l_ToggleShooterOff)
+  {
+    l_mtrPwr = -0.30;
+    l_ToggleShooterOff = true;
+  }
+  // Rest is test Code 
+  else if (m_TestStick.GetRawButton(9))
   {
     l_mtrPwr = -0.30;
   }
-  else if (m_OperatorStick.GetRawButton(10))
+  else if (m_TestStick.GetRawButton(10))
   {
     l_mtrPwr = -0.42;
   }
-  else if (m_OperatorStick.GetRawButton(11))
+  else if (m_TestStick.GetRawButton(11))
   {
     l_mtrPwr = -0.75;
   }
-  else if (m_OperatorStick.GetRawButton(12))
+  else if (m_TestStick.GetRawButton(12))
   {
     l_mtrPwr = -1.00;
   }
-  else if (m_OperatorStick.GetRawButton(1))
+  else if (l_ToggleShooterOff || m_TestStick.GetRawButton(1))
   {
     l_mtrPwr = 0.0;
   }
 
+#if R2JESU_TURNON_SHOOTER
   m_ShooterMotorLeft.Set(l_mtrPwr);
   m_ShooterMotorRight.Set(l_mtrPwr);
+#endif
 
-  // Shoot the ball
+// Shoot the ball
+#if R2JESU_TURNON_PNEUMATICS
+
   if (m_OperatorStick.GetRawButton(8))
     ballPopper.Set(true);
   else
     ballPopper.Set(false);
+
+#endif
 
 #if R2JESU_TURNON_SMARTDASHBOARD
   frc::SmartDashboard::PutNumber("ShooterMtr", l_mtrPwr);

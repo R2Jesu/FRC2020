@@ -20,26 +20,31 @@
 
 void Robot::R2Jesu_ProcessColorWheel()
 {
-  if (m_Drivestick.GetRawButton(8))
+
+  double l_drvMotorLimit = 0.25; // Limit drive motors to 25% when color wheel processing
+
+// Position Color Wheel
+  if (m_OperatorStick.GetRawButton(3))
   { //red button
-    //run motor until game color is seen twice
+    //run motor until game color is seen once
 
     int colorCounter = 0;
     ColorWheelmotor.Set(NidecValue);
-    while (colorCounter < 1 && !(m_Drivestick.GetRawButton(1)))
+    while (colorCounter < 1 && !(m_OperatorStick.GetRawButton(7)))
     {
       if (gameColor == R2Jesu_ReadColorWheel())
       {
         colorCounter++;
       }
       // Allow for operator driving
-      R2Jesu_ProcessDrive();
+      R2Jesu_ProcessDrive(l_drvMotorLimit);
     }
 
     ColorWheelmotor.Set(0.0);
   }
 
-  if (m_Drivestick.GetRawButton(7))
+// Rotate Color 4 times
+  if (m_OperatorStick.GetRawButton(1))
   {
     //run motor until game color is seen 9 times
 
@@ -52,25 +57,25 @@ void Robot::R2Jesu_ProcessColorWheel()
      */
     frc::Color startingColor = R2Jesu_ReadColorWheel();
 
-    while (colorCount < 9 && !(m_Drivestick.GetRawButton(1)))
+    while (colorCount < 9 && !(m_OperatorStick.GetRawButton(7)))
     {
       if (startingColor == R2Jesu_ReadColorWheel())
       {
         if (colorCount < 8)
         {
           colorCount2 = 0;
-          while (colorCount2 < 1 && !(m_Drivestick.GetRawButton(1)))
+          while (colorCount2 < 1 && !(m_OperatorStick.GetRawButton(7)))
           {
             if (!(startingColor == R2Jesu_ReadColorWheel()))
             {
               colorCount2++;
             }
+            // Allow for operator driving
           }
         }
         colorCount++;
       }
-      // Allow for operator driving
-      R2Jesu_ProcessDrive();
+      R2Jesu_ProcessDrive(l_drvMotorLimit);
     }
     ColorWheelmotor.Set(0.0);
   }
@@ -94,9 +99,6 @@ void Robot::R2Jesu_CheckGameTargetColor()
       break;
     case 'Y':
       gameColor = kGreenTarget;
-      break;
-    default:
-      gameColor = Default;
       break;
     }
   }
