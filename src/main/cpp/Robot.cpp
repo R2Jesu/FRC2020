@@ -7,26 +7,65 @@
 
 #include "Robot.h"
 
-  Robot::Robot() 
-  {
-    m_robotDrive.SetExpiration(0.1);
-    m_timer.Start();
-  }
+#define CORJESU_TURNON_PNEUMATICS 1
 
-  void Robot::TeleopInit()  {}
+Robot::Robot()
+{
 
-  void Robot::TeleopPeriodic() 
-  {
+  // Init Timer
+  m_timer.Start();
 
-    // Process user control before drive control.  We may want to switch
-     R2Jesu_ProcessUserControl();
-     R2Jesu_ProcessDrive();
-    
-  }
+  // Init Robot Drive
+  m_robotDrive.SetExpiration(0.1);
+  m_drvL = 0.0;
+  m_drvR = 0.0;
 
-  void Robot::TestPeriodic()  {}
+    // Init Shooter Drive
+  m_ShooterMotorLeft.RestoreFactoryDefaults();
+  m_ShooterMotorRight.RestoreFactoryDefaults();
+  //  Invert the right motor
+  m_ShooterMotorRight.SetInverted(true);
 
+
+  //  Init Color Sensor
+  m_colorMatcher.AddColorMatch(kBlueTarget);
+  m_colorMatcher.AddColorMatch(kGreenTarget);
+  m_colorMatcher.AddColorMatch(kRedTarget);
+  m_colorMatcher.AddColorMatch(kYellowTarget);
+  m_colorMatcher.AddColorMatch(Default);
+
+  // Run Pneumatics
+#if CORJESU_TURNON_PNEUMATICS
+  // Set Compressor Object for automatic closed loop control
+  compressorObject.SetClosedLoopControl(true);
+  // Set Solenoids to iniital stat
+  ballPopper.Set(false);
+#endif
+}
+
+void Robot::TeleopInit() 
+{
+  gameColor = nun;
+}
+
+void Robot::TeleopPeriodic()
+{
+
+  // Set the target color
+R2Jesu_CheckGameTargetColor();
+
+  // Process user control before drive control.
+  R2Jesu_ProcessUserControl();
+
+  // Note this needs to come last to merge other drive motor request.
+  R2Jesu_ProcessDrive();
+}
+
+void Robot::TestPeriodic() {}
 
 #ifndef RUNNING_FRC_TESTS
-int main() { return frc::StartRobot<Robot>(); }
+int main()
+{
+  return frc::StartRobot<Robot>();
+}
 #endif

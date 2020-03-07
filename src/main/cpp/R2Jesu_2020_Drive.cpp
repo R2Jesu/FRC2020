@@ -7,13 +7,14 @@
 
 #include "Robot.h"
 
-  void Robot::R2Jesu_ProcessDrive() 
-  {
-     // Drive with arcade style (use right stick)
-    m_robotDrive.ArcadeDrive(m_stick.GetY(), m_stick.GetX());
+void Robot::R2Jesu_ProcessDrive()
+{
 
-  }
+#if 0 // Need to update to merge in other motor requests
+  m_drvL += m_Drivestick.GetY();
+  m_drvR += m_Drivestick.GetX();
+#endif
 
-
-
- 
+  // Drive with arcade style (use right stick)
+  m_robotDrive.ArcadeDrive(m_Drivestick.GetY(), m_Drivestick.GetX());
+}
