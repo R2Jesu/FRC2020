@@ -35,6 +35,7 @@
 
 // NavX
 #include "AHRS.h"
+#include <frc/PIDController.h>
 
 // Pneumatics
 #include <frc/Compressor.h>
@@ -55,7 +56,7 @@
 #define R2JESU_TURNON_SMARTDASHBOARD 1
 
 // Control robot config for either Fin (1) or Rex (0)
-#define R2JESU_FIN_CONFIG 1
+#define R2JESU_FIN_CONFIG 0
 
 #if R2JESU_FIN_CONFIG
 #define R2JESU_TURNON_PNEUMATICS 1
@@ -75,7 +76,25 @@
 #define R2JESU_TURNON_NAV 1
 #endif
 
-class Robot : public frc::TimedRobot
+
+/* The following PID Controller coefficients will need to be tuned */
+/* to match the dynamics of your drive system.  Note that the      */
+/* SmartDashboard in Test mode has support for helping you tune    */
+/* controllers by displaying a form where you can enter new P, I,  */
+/* and D constants and test the mechanism.                         */
+
+const static double kP = 0.05f;
+const static double kI = 0.00f;
+const static double kD = 0.00f;
+const static double kF = 0.00f;
+
+/* This tuning parameter indicates how close to "on target" the    */
+/* PID Controller will attempt to get.                             */
+
+const static double kToleranceDegrees = 2.0f;
+
+
+class Robot : public frc::TimedRobot, public frc::PIDOutput
 {
 public:
   // Consturctor
@@ -96,6 +115,16 @@ public:
   void TeleopPeriodic();
 
   void TestPeriodic();
+
+#if R2JESU_TURNON_NAV
+
+  /* This function is invoked periodically by the PID Controller, */
+  /* based upon navX MXP yaw angle input and PID Coefficients.    */
+  virtual void PIDWrite(double output)
+  {
+    this->rotateToAngleRate = output;
+  }
+#endif
 
 private:
   // =================================================
@@ -185,6 +214,8 @@ private:
 // NavX
 #if R2JESU_TURNON_NAV
   AHRS *ahrs;
+  frc::PIDController *turnController; // PID Controller
+  double rotateToAngleRate=0.0;      // Current rotation rate
 #endif
 
   // Support Objects

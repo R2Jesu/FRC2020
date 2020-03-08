@@ -56,6 +56,13 @@ void Robot::RobotInit()
 #if R2JESU_TURNON_NAV
   ahrs = new AHRS(frc::SPI::Port::kMXP);
   ahrs->ZeroYaw();
+
+
+          turnController = new frc::PIDController(kP, kI, kD, kF, ahrs, this);
+        turnController->SetInputRange(-180.0f,  180.0f);
+        turnController->SetOutputRange(-1.0, 1.0);
+        turnController->SetAbsoluteTolerance(kToleranceDegrees);
+        turnController->SetContinuous(true);
 #endif
 
   // Vision & Camera Init
