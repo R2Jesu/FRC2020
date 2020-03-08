@@ -9,10 +9,13 @@
 #include <frc/Joystick.h>
 #include <frc/TimedRobot.h>
 #include <frc/Timer.h>
-#include <frc/livewindow/LiveWindow.h>
 #include <frc/drive/DifferentialDrive.h>
 #include <frc/Encoder.h>
+
+// Live Window and SmartDashboard
+#include <frc/livewindow/LiveWindow.h>
 #include <frc/smartdashboard/SmartDashboard.h>
+#include <frc/smartdashboard/SendableChooser.h>
 
 // Motor Controllers
 #include <frc/spark.h>
@@ -30,38 +33,59 @@
 //  Nav Sensor
 #include <ctre/Phoenix.h>
 
+// NavX
+#include "AHRS.h"
+
 // Pneumatics
 #include <frc/Compressor.h>
 #include <frc/Solenoid.h>
 
+// Camera
+
+#include <thread>
+#include <cameraserver/CameraServer.h>
+//#include <frc/TimedRobot.h>
+//#include <wpi/raw_ostream.h>
+#include <opencv2/core/core.hpp>
+#include <opencv2/core/types.hpp>
+#include <opencv2/imgproc/imgproc.hpp>
+#include <GripPipeline.h>
+#include <cmath>
+
 #define R2JESU_TURNON_SMARTDASHBOARD 1
 
 // Control robot config for either Fin (1) or Rex (0)
-#define R2JESU_FIN_CONFIG 0
+#define R2JESU_FIN_CONFIG 1
 
 #if R2JESU_FIN_CONFIG
-#  define R2JESU_TURNON_PNEUMATICS 1
-#  define R2JESU_TURNON_ENCODER 1
-#  define R2JESU_TURNON_INTAKE 1
-#  define R2JESU_TURNON_SHOOTER 1
-#  define R2JESU_TURNON_WINCH 0
+#define R2JESU_TURNON_PNEUMATICS 1
+#define R2JESU_TURNON_ENCODER 1
+#define R2JESU_TURNON_INTAKE 1
+#define R2JESU_TURNON_SHOOTER 1
+#define R2JESU_TURNON_WINCH 0
+#define R2JESU_TURNON_VISION 1
+#define R2JESU_TURNON_NAV 1
 #else
-#  define R2JESU_TURNON_PNEUMATICS 0
-#  define R2JESU_TURNON_ENCODER 0
-#  define R2JESU_TURNON_INTAKE 0
-#  define R2JESU_TURNON_SHOOTER 0
-#  define R2JESU_TURNON_WINCH 0
+#define R2JESU_TURNON_PNEUMATICS 0
+#define R2JESU_TURNON_ENCODER 0
+#define R2JESU_TURNON_INTAKE 0
+#define R2JESU_TURNON_SHOOTER 0
+#define R2JESU_TURNON_WINCH 0
+#define R2JESU_TURNON_VISION 1
+#define R2JESU_TURNON_NAV 1
 #endif
 
 class Robot : public frc::TimedRobot
 {
 public:
   // Consturctor
-  Robot();
+  //Robot();
 
   // =================================================
   //  Top Level Robot Functions
   // =================================================
+
+  void RobotInit();
 
   void AutonomousInit();
 
@@ -92,6 +116,9 @@ private:
   void R2Jesu_ProcessColorWheel(void);
   void R2Jesu_CheckGameTargetColor(void);
   frc::Color R2Jesu_ReadColorWheel(void);
+
+  // Vision Processing
+  static void VisionThread(void);
 
   // =================================================
   //  Class Objects
@@ -146,14 +173,28 @@ private:
 
   std::string gameData;
   frc::Color gameColor = nun;
-  double NidecValue = 0.25;
+  const double NidecValue = 0.35;
   frc::NidecBrushless ColorWheelmotor = frc::NidecBrushless(3, 0);
 
   // Winch Subsystem
   WPI_TalonSRX m_winchMotor{4};
 
+  // Vision System
+  static double turning;
+
+// NavX
+#if R2JESU_TURNON_NAV
+  AHRS *ahrs;
+#endif
+
   // Support Objects
   frc::Timer m_timer;
+
+  //  Driver station Control
+  frc::SendableChooser<std::string> m_chooser;
+  const std::string kAutoNameDefault = "Default";
+  const std::string kAutoNameCustom = "My Auto";
+  std::string m_autoSelected;
 
   // Debug & feedback
   frc::LiveWindow &m_lw = *frc::LiveWindow::GetInstance();

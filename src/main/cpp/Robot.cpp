@@ -7,7 +7,9 @@
 
 #include "Robot.h"
 
-Robot::Robot()
+double Robot::turning;
+
+void Robot::RobotInit()
 {
   // Init Timer
   m_timer.Start();
@@ -48,6 +50,25 @@ Robot::Robot()
   compressorObject.SetClosedLoopControl(true);
   // Set Solenoids to iniital stat
   ballPopper.Set(false);
+#endif
+
+// NavX Sensor
+#if R2JESU_TURNON_NAV
+  ahrs = new AHRS(frc::SPI::Port::kMXP);
+  ahrs->ZeroYaw();
+#endif
+
+  // Vision & Camera Init
+
+  // Drive USB Camera - 1
+  cs::UsbCamera drvCamera = frc::CameraServer::GetInstance()->StartAutomaticCapture(1);
+  drvCamera.SetResolution(320, 240);
+  drvCamera.SetFPS(15);
+
+// Vision Processing Camera - 0
+#if R2JESU_TURNON_VISION
+  std::thread visionThread(VisionThread);
+  visionThread.detach();
 #endif
 }
 

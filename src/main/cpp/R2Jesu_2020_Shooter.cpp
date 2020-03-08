@@ -10,14 +10,14 @@
 void Robot::R2Jesu_ProcessShooter()
 {
   // Control shooter
-  bool l_ToggleShooterOff = false;
   double l_mtrPwr = 0.0;
 
-  if (m_OperatorStick.GetThrottle() >  0.3 && !l_ToggleShooterOff)
+  if (m_OperatorStick.GetThrottle() > 0.3)
   {
     l_mtrPwr = -0.30;
-    l_ToggleShooterOff = true;
   }
+  
+#if 0 // Test Code
   // Rest is test Code 
   else if (m_TestStick.GetRawButton(9))
   {
@@ -35,10 +35,8 @@ void Robot::R2Jesu_ProcessShooter()
   {
     l_mtrPwr = -1.00;
   }
-  else if (l_ToggleShooterOff || m_TestStick.GetRawButton(1))
-  {
-    l_mtrPwr = 0.0;
-  }
+
+#endif
 
 #if R2JESU_TURNON_SHOOTER
   m_ShooterMotorLeft.Set(l_mtrPwr);
