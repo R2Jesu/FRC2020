@@ -76,15 +76,14 @@
 #define R2JESU_TURNON_NAV 1
 #endif
 
-
 /* The following PID Controller coefficients will need to be tuned */
 /* to match the dynamics of your drive system.  Note that the      */
 /* SmartDashboard in Test mode has support for helping you tune    */
 /* controllers by displaying a form where you can enter new P, I,  */
 /* and D constants and test the mechanism.                         */
 
-const static double kP = 0.05f;
-const static double kI = 0.00f;
+const static double kP = 0.020f;
+const static double kI = 0.00020f;
 const static double kD = 0.00f;
 const static double kF = 0.00f;
 
@@ -92,7 +91,6 @@ const static double kF = 0.00f;
 /* PID Controller will attempt to get.                             */
 
 const static double kToleranceDegrees = 2.0f;
-
 
 class Robot : public frc::TimedRobot, public frc::PIDOutput
 {
@@ -117,7 +115,6 @@ public:
   void TestPeriodic();
 
 #if R2JESU_TURNON_NAV
-
   /* This function is invoked periodically by the PID Controller, */
   /* based upon navX MXP yaw angle input and PID Coefficients.    */
   virtual void PIDWrite(double output)
@@ -133,6 +130,10 @@ private:
 
   //  Main Robot Drive
   void R2Jesu_ProcessDrive(double p_LimitFactor = 1.0);
+#if 0 //R2JESU_TURNON_NAV
+  void R2Jesu_TurnToAngle(double p_TurnAngle);
+  void R2Jesu_TurnDeltaAngle(double p_TurnDeltaAngle);
+#endif
 
   //  Main User Control functions.
   //  This may need to be split out.
@@ -215,7 +216,7 @@ private:
 #if R2JESU_TURNON_NAV
   AHRS *ahrs;
   frc::PIDController *turnController; // PID Controller
-  double rotateToAngleRate=0.0;      // Current rotation rate
+  double rotateToAngleRate = 0.0;     // Current rotation rate
 #endif
 
   // Support Objects

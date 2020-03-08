@@ -47,10 +47,10 @@ void Robot::R2Jesu_ProcessDrive(double p_LimitFactor)
   }
   else if (m_Drivestick.GetRawButton(6))
   {
-    turnController->SetSetpoint(-20.9f);
+    turnController->SetSetpoint(-20.0f);
     rotateToAngle = true;
   }
-  else if (m_Drivestick.GetRawButton(7))
+  else if (m_Drivestick.GetRawButton(3))
   {
     turnController->SetSetpoint(-10.0f);
     rotateToAngle = true;

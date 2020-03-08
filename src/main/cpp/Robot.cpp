@@ -59,8 +59,8 @@ void Robot::RobotInit()
 
 
           turnController = new frc::PIDController(kP, kI, kD, kF, ahrs, this);
-        turnController->SetInputRange(-180.0f,  180.0f);
-        turnController->SetOutputRange(-1.0, 1.0);
+        turnController->SetInputRange(-90.0f,  90.0f);
+        turnController->SetOutputRange(-0.50, 0.50);
         turnController->SetAbsoluteTolerance(kToleranceDegrees);
         turnController->SetContinuous(true);
 #endif
