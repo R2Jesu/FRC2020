@@ -71,20 +71,22 @@ void Robot::R2Jesu_ProcessUserControl()
   // Run Winch
   double l_winchMtr = 0.0;
 
+  bool l_dashbd_bool = frc::SmartDashboard::GetBoolean("DB/Button 3", false);
+  frc::SmartDashboard::PutBoolean("Button3", l_dashbd_bool);
+
   // Note:
   //   + is CCW from battery side
   //   - is CW  from battery side
   if (m_Drivestick.GetRawButton(10))
   {
-    l_winchMtr = -0.2;
+    l_winchMtr = -0.4;
   }
-// Need to define
-#if 0
-  else if (m_Drivestick.GetRawButton(12))
+  else if (l_dashbd_bool &&
+           m_Drivestick.GetRawButton(11) &&
+           m_OperatorStick.GetRawButton(8))
   {
-    l_winchMtr = 0.2;
+    l_winchMtr = 0.4;
   }
-#endif
 
 #if R2JESU_TURNON_WINCH
   m_winchMotor.Set(l_winchMtr);

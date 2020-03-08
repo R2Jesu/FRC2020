@@ -68,7 +68,7 @@ void Robot::VisionThread()
       rectangle(mat, cv::Point(centerX - 10, centerY - 10), cv::Point(centerX + 10, centerY + 10), cv::Scalar(0, 0, 255), 5);
       cv::Mat camMat = (cv::Mat1d(3, 3) << 667.0055536838427, 0.0, 342.42511872039944, 0.0, 664.985144080759, 237.32436945681167, 0.0, 0.0, 1.0);
       cv::Mat distortion = (cv::Mat1d(1, 5) << 0.15703749174667256, -1.134926997716282, -0.0033293254944312435, 0.0016418473011026258, 2.1006981908434668);
-      cv::undistortPoints(ourPointVec, undistortedPointVec, camMat, distortion);
+      cv::undistortPoints(ourPointVec, undistortedPointVec, camMat, distortion, cv::noArray(), camMat);
       cv::Point2d undistortedPoint = undistortedPointVec[0];
 
       //double lengthX = (centerX - 320.00) / 333.82;
@@ -85,11 +85,10 @@ void Robot::VisionThread()
       double ax = atan2(lengthX, 1.0);
       double ay = atan2(lengthY * cos(ax), 1.0);
       //You need to remasure the camera angle and set the radians below replacing 0.139626 with whatever
-      double ourDist = (98.25 - 28.00) / tan(0.139626 + ay);
+      double ourDist = (98.25 - 28.00) / tan(0.349066 + ay);
       frc::SmartDashboard::PutNumber("DISTANCE", ourDist);
       turning = centerX;
     }
     outputStream.PutFrame(mat);
-    //printf("crap %s\n", gp.GetFindContoursOutput());
   }
 }
