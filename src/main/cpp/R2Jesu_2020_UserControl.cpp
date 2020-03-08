@@ -76,13 +76,13 @@ void Robot::R2Jesu_ProcessUserControl()
   //   - is CW  from battery side
   if (m_Drivestick.GetRawButton(10))
   {
-    l_winchMtr = -0.2;
+    l_winchMtr = -0.4;
   }
 // Need to define
-#if 0
+#if 1
   else if (m_Drivestick.GetRawButton(12))
   {
-    l_winchMtr = 0.2;
+    l_winchMtr = 0.4;
   }
 #endif
 

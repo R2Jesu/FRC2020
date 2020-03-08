@@ -11,7 +11,7 @@ void Robot::VisionThread()
 {
 
   // Get the USB camera from CameraServer (0)
-  cs::UsbCamera camera = frc::CameraServer::GetInstance()->StartAutomaticCapture(0);
+  cs::UsbCamera camera = frc::CameraServer::GetInstance()->StartAutomaticCapture(1);
   // Set the resolution
   camera.SetResolution(640, 480);
   camera.SetExposureManual(5);

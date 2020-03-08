@@ -14,7 +14,7 @@ void Robot::R2Jesu_ProcessShooter()
 
   if (m_OperatorStick.GetThrottle() > 0.3)
   {
-    l_mtrPwr = -0.30;
+    l_mtrPwr = -0.435;
   }
   
 #if 0 // Test Code
@@ -46,7 +46,7 @@ void Robot::R2Jesu_ProcessShooter()
 // Shoot the ball
 #if R2JESU_TURNON_PNEUMATICS
 
-  if (m_OperatorStick.GetRawButton(8))
+  if (m_OperatorStick.GetRawButton(2))
     ballPopper.Set(true);
   else
     ballPopper.Set(false);

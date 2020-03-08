@@ -61,7 +61,7 @@ void Robot::RobotInit()
   // Vision & Camera Init
 
   // Drive USB Camera - 1
-  cs::UsbCamera drvCamera = frc::CameraServer::GetInstance()->StartAutomaticCapture(1);
+  cs::UsbCamera drvCamera = frc::CameraServer::GetInstance()->StartAutomaticCapture(0);
   drvCamera.SetResolution(320, 240);
   drvCamera.SetFPS(15);
 
