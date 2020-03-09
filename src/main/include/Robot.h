@@ -52,6 +52,10 @@
 #include <GripPipeline.h>
 #include <cmath>
 
+//Limit Switches
+#include <frc/DigitalInput.h>
+#include <frc/Timer.h>
+
 #define R2JESU_TURNON_SMARTDASHBOARD 1
 
 // Control robot config for either Fin (1) or Rex (0)
@@ -117,6 +121,9 @@ private:
   void R2Jesu_CheckGameTargetColor(void);
   frc::Color R2Jesu_ReadColorWheel(void);
 
+  //Intake Processing
+  void R2Jesu_ProcessIntake(void);
+
   // Vision Processing
   static void VisionThread(void);
 
@@ -152,12 +159,16 @@ private:
 #if R2JESU_TURNON_SHOOTER
   rev::CANSparkMax m_ShooterMotorLeft{1, rev::CANSparkMax::MotorType::kBrushless};
   rev::CANSparkMax m_ShooterMotorRight{3, rev::CANSparkMax::MotorType::kBrushless};
+  frc::DigitalInput lowerLimit{1};
+  frc::DigitalInput ballCupLimit{2};
 #endif
 
 #if R2JESU_TURNON_PNEUMATICS
   frc::Compressor compressorObject;
   frc::Solenoid ballPopper{0};
+  frc::Solenoid colorArm{1};
 #endif
+
 
   // Color Wheel Subsystem
   static constexpr auto i2cPort = frc::I2C::Port::kOnboard;

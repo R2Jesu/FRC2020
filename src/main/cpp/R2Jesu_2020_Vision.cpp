@@ -11,14 +11,16 @@ void Robot::VisionThread()
 {
 
   // Get the USB camera from CameraServer (0)
-  cs::UsbCamera camera = frc::CameraServer::GetInstance()->StartAutomaticCapture(1);
+  cs::UsbCamera camera = frc::CameraServer::GetInstance()->StartAutomaticCapture(0);
+
   // Set the resolution
   camera.SetResolution(640, 480);
   camera.SetExposureManual(5);
+  printf("Brightness %d\n", camera.GetBrightness());
   //camera.SetFPS(15);
 
   // Get a CvSink. This will capture Mats from the Camera
-  cs::CvSink cvSink = frc::CameraServer::GetInstance()->GetVideo();
+  cs::CvSink cvSink = frc::CameraServer::GetInstance()->GetVideo(camera);
   // Setup a CvSource. This will send images back to the Dashboard
   cs::CvSource outputStream = frc::CameraServer::GetInstance()->PutVideo("Rectangle", 640, 480);
 
@@ -36,6 +38,7 @@ void Robot::VisionThread()
       // Send the output the error.
       outputStream.NotifyError(cvSink.GetError());
       // skip the rest of the current iteration
+      printf("notify error\n");
       continue;
     }
     // Put a rectangle on the image
@@ -48,8 +51,10 @@ void Robot::VisionThread()
       float contourArea = cv::contourArea((*gp.GripPipeline::GetFindContoursOutput())[i]);
       if (contourArea > 100000 || contourArea < 100)
       {
+        //printf("Throw away contour, area: %f\n", contourArea);
         continue;
       }
+      printf("Valid countour\n");
       cv::Rect boundRect = cv::boundingRect((*gp.GripPipeline::GetFindContoursOutput())[i]);
       double centerX = boundRect.x + (boundRect.width / 2);
       // We actually want the top middle as the target center as this is only half the goal
@@ -64,8 +69,6 @@ void Robot::VisionThread()
       frc::SmartDashboard::PutNumber("our y", ourPoint.y);
       //ourPointVec[0] = ourPoint;
 
-      cv::drawContours(mat, *gp.GripPipeline::GetFindContoursOutput(), i, cv::Scalar(255, 0, 0), 3);
-      rectangle(mat, cv::Point(centerX - 10, centerY - 10), cv::Point(centerX + 10, centerY + 10), cv::Scalar(0, 0, 255), 5);
       cv::Mat camMat = (cv::Mat1d(3, 3) << 667.0055536838427, 0.0, 342.42511872039944, 0.0, 664.985144080759, 237.32436945681167, 0.0, 0.0, 1.0);
       cv::Mat distortion = (cv::Mat1d(1, 5) << 0.15703749174667256, -1.134926997716282, -0.0033293254944312435, 0.0016418473011026258, 2.1006981908434668);
       cv::undistortPoints(ourPointVec, undistortedPointVec, camMat, distortion, cv::noArray(), camMat);
@@ -87,6 +90,8 @@ void Robot::VisionThread()
       //You need to remasure the camera angle and set the radians below replacing 0.139626 with whatever
       double ourDist = (98.25 - 28.00) / tan(0.349066 + ay);
       frc::SmartDashboard::PutNumber("DISTANCE", ourDist);
+      cv::drawContours(mat, *gp.GripPipeline::GetFindContoursOutput(), i, cv::Scalar(255, 0, 0), 3);
+      rectangle(mat, cv::Point(centerX - 10, centerY - 10), cv::Point(centerX + 10, centerY + 10), cv::Scalar(0, 0, 255), 5);
       turning = centerX;
     }
     outputStream.PutFrame(mat);

@@ -22,6 +22,14 @@ void Robot::R2Jesu_ProcessColorWheel()
 {
 
   double l_drvMotorLimit = 0.25; // Limit drive motors to 25% when color wheel processing
+#if R2JESU_TURNON_PNEUMATICS
+
+  if (m_Drivestick.GetRawButton(8))
+    colorArm.Set(true);
+  else
+    colorArm.Set(false);
+
+#endif
 
 // Position Color Wheel
   if (m_OperatorStick.GetRawButton(3))

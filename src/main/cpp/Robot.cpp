@@ -61,9 +61,10 @@ void Robot::RobotInit()
   // Vision & Camera Init
 
   // Drive USB Camera - 1
-  cs::UsbCamera drvCamera = frc::CameraServer::GetInstance()->StartAutomaticCapture(0);
+  cs::UsbCamera drvCamera = frc::CameraServer::GetInstance()->StartAutomaticCapture(1);
   drvCamera.SetResolution(320, 240);
-  drvCamera.SetFPS(15);
+  drvCamera.SetExposureAuto();
+//  drvCamera.SetFPS(15);
 
 // Vision Processing Camera - 0
 #if R2JESU_TURNON_VISION
@@ -82,6 +83,9 @@ void Robot::TeleopPeriodic()
 
   // Set the target color
   R2Jesu_CheckGameTargetColor();
+
+  // Process intake motor commands
+  R2Jesu_ProcessIntake();
 
   // Process user control before drive control.
   R2Jesu_ProcessUserControl();
