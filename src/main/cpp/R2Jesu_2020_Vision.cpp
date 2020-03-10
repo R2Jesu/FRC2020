@@ -31,6 +31,7 @@ void Robot::VisionThread()
   grip::GripPipeline gp;
   while (true)
   {
+    currentDistance = 0;
     // Tell the CvSink to grab a frame from the camera and
     // put it
     // in the source mat.  If there is an error notify the
@@ -95,6 +96,7 @@ void Robot::VisionThread()
       cv::drawContours(mat, *gp.GripPipeline::GetFindContoursOutput(), i, cv::Scalar(255, 0, 0), 3);
       rectangle(mat, cv::Point(centerX - 10, centerY - 10), cv::Point(centerX + 10, centerY + 10), cv::Scalar(0, 0, 255), 5);
       turning = centerX;
+      currentDistance = ourDist;
     }
     outputStream.PutFrame(mat);
   }

@@ -8,6 +8,7 @@
 #include "Robot.h"
 
 double Robot::turning;
+double Robot::currentDistance;
 
 void Robot::RobotInit()
 {

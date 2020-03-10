@@ -11,12 +11,18 @@ void Robot::R2Jesu_ProcessShooter()
 {
   // Control shooter
   double l_mtrPwr = 0.0;
-
+  double shooterPower = (currentDistance * .003588) + .347;
+  if (shooterPower < .39){
+    shooterPower = .39;
+  }
+  if (currentDistance == 0){
+    shooterPower = .75;
+  }
   if (m_OperatorStick.GetThrottle() > 0.3)
   {
-    l_mtrPwr = -0.39;
+    l_mtrPwr = shooterPower;
   }
-  
+frc::SmartDashboard::PutNumber("shooter power", shooterPower);  
 #if 0 // Test Code
   // Rest is test Code 
   else if (m_TestStick.GetRawButton(9))

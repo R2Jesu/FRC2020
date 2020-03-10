@@ -192,6 +192,7 @@ private:
 
   // Vision System
   static double turning;
+  static double currentDistance;
 
 // NavX
 #if R2JESU_TURNON_NAV
