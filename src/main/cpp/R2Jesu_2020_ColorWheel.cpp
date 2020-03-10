@@ -35,7 +35,7 @@ void Robot::R2Jesu_ProcessColorWheel()
   if (m_OperatorStick.GetRawButton(3))
   { //red button
     //run motor until game color is seen once
-
+  colorArm.Set(true);
     int colorCounter = 0;
     ColorWheelmotor.Set(NidecValue);
     while (colorCounter < 1 && !(m_OperatorStick.GetRawButton(7)))
@@ -49,22 +49,23 @@ void Robot::R2Jesu_ProcessColorWheel()
     }
 
     ColorWheelmotor.Set(0.0);
+      colorArm.Set(false);
   }
 
 // Rotate Color 4 times
   if (m_OperatorStick.GetRawButton(1))
   {
     //run motor until game color is seen 9 times
-
+  colorArm.Set(true);
     int colorCount = 0;
     int colorCount2 = 0;
-    ColorWheelmotor.Set(NidecValue);
+    
 
     /**
      * Run the color match algorithm on our detected color
      */
     frc::Color startingColor = R2Jesu_ReadColorWheel();
-
+    ColorWheelmotor.Set(NidecValue);
     while (colorCount < 9 && !(m_OperatorStick.GetRawButton(7)))
     {
       if (startingColor == R2Jesu_ReadColorWheel())
@@ -83,9 +84,10 @@ void Robot::R2Jesu_ProcessColorWheel()
         }
         colorCount++;
       }
-      R2Jesu_ProcessDrive(l_drvMotorLimit);
+    //  R2Jesu_ProcessDrive(l_drvMotorLimit);
     }
     ColorWheelmotor.Set(0.0);
+      colorArm.Set(false);
   }
 }
 
@@ -154,5 +156,5 @@ frc::Color Robot::R2Jesu_ReadColorWheel()
   frc::SmartDashboard::PutString("Detected Color", colorString);
 #endif
 
-  return (detectedColor);
+  return (matchedColor);
 }

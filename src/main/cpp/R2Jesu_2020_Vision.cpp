@@ -16,7 +16,9 @@ void Robot::VisionThread()
   // Set the resolution
   camera.SetResolution(640, 480);
   camera.SetExposureManual(5);
-  printf("Brightness %d\n", camera.GetBrightness());
+  camera.SetBrightness(20);
+  //printf("Brightness %d\n", camera.GetBrightness());
+   frc::SmartDashboard::PutNumber("brightness", camera.GetBrightness());
   //camera.SetFPS(15);
 
   // Get a CvSink. This will capture Mats from the Camera
@@ -49,9 +51,9 @@ void Robot::VisionThread()
     for (size_t i = 0; i < (*gp.GripPipeline::GetFindContoursOutput()).size(); i++)
     {
       float contourArea = cv::contourArea((*gp.GripPipeline::GetFindContoursOutput())[i]);
-      if (contourArea > 100000 || contourArea < 100)
+      if (contourArea > 100000 || contourArea < 40)
       {
-        //printf("Throw away contour, area: %f\n", contourArea);
+        printf("Throw away contour, area: %f\n", contourArea);
         continue;
       }
       printf("Valid countour\n");
@@ -88,7 +90,7 @@ void Robot::VisionThread()
       double ax = atan2(lengthX, 1.0);
       double ay = atan2(lengthY * cos(ax), 1.0);
       //You need to remasure the camera angle and set the radians below replacing 0.139626 with whatever
-      double ourDist = (98.25 - 28.00) / tan(0.349066 + ay);
+      double ourDist = (98.25 - 28.00) / tan(0.20944 + ay);
       frc::SmartDashboard::PutNumber("DISTANCE", ourDist);
       cv::drawContours(mat, *gp.GripPipeline::GetFindContoursOutput(), i, cv::Scalar(255, 0, 0), 3);
       rectangle(mat, cv::Point(centerX - 10, centerY - 10), cv::Point(centerX + 10, centerY + 10), cv::Scalar(0, 0, 255), 5);

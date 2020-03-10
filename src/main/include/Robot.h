@@ -174,17 +174,17 @@ private:
   static constexpr auto i2cPort = frc::I2C::Port::kOnboard;
   rev::ColorSensorV3 m_colorSensor{i2cPort};
   rev::ColorMatch m_colorMatcher;
-  static constexpr frc::Color kBlueTarget = frc::Color(0.125, 0.421, 0.454);
-  static constexpr frc::Color kGreenTarget = frc::Color(0.194, 0.582, 0.223);
-  static constexpr frc::Color kRedTarget = frc::Color(0.483, 0.387, 0.13);
-  static constexpr frc::Color kYellowTarget = frc::Color(0.312, 0.564, 0.124);
+  static constexpr frc::Color kBlueTarget = frc::Color(0.204, 0.461, 0.335);
+  static constexpr frc::Color kGreenTarget = frc::Color(0.233, 0.516, 0.251);
+  static constexpr frc::Color kRedTarget = frc::Color(0.338, 0.447, 0.214);
+  static constexpr frc::Color kYellowTarget = frc::Color(0.286, 0.528, 0.186);
   static constexpr frc::Color nun = frc::Color(0, 0, 0);
   static constexpr frc::Color Default = frc::Color(1, 1, 1);
   double ColorConfidence = 0.0;
 
   std::string gameData;
   frc::Color gameColor = nun;
-  const double NidecValue = 0.35;
+  const double NidecValue = 0.5;
   frc::NidecBrushless ColorWheelmotor = frc::NidecBrushless(3, 0);
 
   // Winch Subsystem

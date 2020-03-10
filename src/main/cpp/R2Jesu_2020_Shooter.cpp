@@ -14,7 +14,7 @@ void Robot::R2Jesu_ProcessShooter()
 
   if (m_OperatorStick.GetThrottle() > 0.3)
   {
-    l_mtrPwr = -0.435;
+    l_mtrPwr = -0.39;
   }
   
 #if 0 // Test Code

@@ -15,13 +15,22 @@
 
   void Robot::AutonomousPeriodic() 
   {
+    m_ShooterMotorLeft.Set(-.45);
+    m_ShooterMotorRight.Set(-.45);
     // Drive for 2 seconds
-    if (m_timer.Get() < 2.0) {
+    if (m_timer.Get() < 5.0) {
       // Drive forwards half speed
-      m_robotDrive.ArcadeDrive(-0.5, 0.0);
+      m_robotDrive.ArcadeDrive(-0.3, 0.0);
     } else {
       // Stop robot
       m_robotDrive.ArcadeDrive(0.0, 0.0);
+    }
+    if (!(ballCupLimit.Get())) {
+      snowMotor.Set(0);
+    ballPopper.Set(true);
+    } else {
+      ballPopper.Set(false);
+      snowMotor.Set(-1);
     }
   }
 

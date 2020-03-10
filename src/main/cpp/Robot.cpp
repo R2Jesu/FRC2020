@@ -76,6 +76,8 @@ void Robot::RobotInit()
 void Robot::TeleopInit()
 {
   gameColor = nun;
+  m_ShooterMotorLeft.Set(0.0);
+  m_ShooterMotorRight.Set(0.0);
 }
 
 void Robot::TeleopPeriodic()
