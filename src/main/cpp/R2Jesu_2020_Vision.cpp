@@ -16,7 +16,7 @@ void Robot::VisionThread()
   // Set the resolution
   camera.SetResolution(640, 480);
   camera.SetExposureManual(5);
-  camera.SetBrightness(20);
+  camera.SetBrightness(10);
   //printf("Brightness %d\n", camera.GetBrightness());
    frc::SmartDashboard::PutNumber("brightness", camera.GetBrightness());
   //camera.SetFPS(15);
@@ -31,7 +31,7 @@ void Robot::VisionThread()
   grip::GripPipeline gp;
   while (true)
   {
-    currentDistance = 0;
+   // currentDistance = 0;
     // Tell the CvSink to grab a frame from the camera and
     // put it
     // in the source mat.  If there is an error notify the
@@ -94,9 +94,12 @@ void Robot::VisionThread()
       double ourDist = (98.25 - 28.00) / tan(0.20944 + ay);
       frc::SmartDashboard::PutNumber("DISTANCE", ourDist);
       cv::drawContours(mat, *gp.GripPipeline::GetFindContoursOutput(), i, cv::Scalar(255, 0, 0), 3);
-      rectangle(mat, cv::Point(centerX - 10, centerY - 10), cv::Point(centerX + 10, centerY + 10), cv::Scalar(0, 0, 255), 5);
-      turning = centerX;
+      if ((centerX > 300) && (centerX < 340))
+     { rectangle(mat, cv::Point(centerX - 10, centerY - 10), cv::Point(centerX + 10, centerY + 10), cv::Scalar(0, 0, 255), 5);
+     } else {
+      rectangle(mat, cv::Point(centerX - 10, centerY - 10), cv::Point(centerX + 10, centerY + 10), cv::Scalar(255, 0, 0), 5);}
       currentDistance = ourDist;
+      frc::SmartDashboard::PutNumber("current distance", currentDistance);
     }
     outputStream.PutFrame(mat);
   }

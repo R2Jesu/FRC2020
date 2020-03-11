@@ -11,7 +11,8 @@ void Robot::R2Jesu_ProcessShooter()
 {
   // Control shooter
   double l_mtrPwr = 0.0;
-  double shooterPower = (currentDistance * .003588) + .347;
+  double shooterPower = (currentDistance * .0003007) + .3472;
+  frc::SmartDashboard::PutNumber("current distance 2", currentDistance);
   if (shooterPower < .39){
     shooterPower = .39;
   }
@@ -20,7 +21,7 @@ void Robot::R2Jesu_ProcessShooter()
   }
   if (m_OperatorStick.GetThrottle() > 0.3)
   {
-    l_mtrPwr = shooterPower;
+    l_mtrPwr = -shooterPower;
   }
 frc::SmartDashboard::PutNumber("shooter power", shooterPower);  
 #if 0 // Test Code
